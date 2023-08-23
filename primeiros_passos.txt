@@ -1,0 +1,85 @@
+/************** INICIANDO PROJETO NODE COM EXPRESS **********/
+npm init -y -> inicializa o projeto node e cria o package.json (arquivo de config para cuidar de dependencias e infos do projeto)
+npm install express --save
+
+// o node_modules possui todas as bibliotecas dependentes do projeto e tb cuida das versões do mesmo
+// como o express foi instalado no projeto, consta como dependecia no package.json o express, pq já ficou salvo no lock.json
+
+criar o .gitignore com a node_modules incluida pq ela não precisa subir para o git.
+
+// Através do package.json e do package-lock.json com o npm install, a node_modules será gerada com todas as instalações
+// necessárias do projeto
+
+import do express no arquivo server.js  em uma variavel
+
+const express = require('express');
+
+const app = express();
+
+app.use(express.json());
+
+const PORT = 3333;
+app.listen(PORT, () => console.log(`Server is running on PORT: ${PORT}`));
+
+**Executando a Aplicação**
+node src/server.js -> para simplificar criar um script de inicialização no package.json 
+Em scripts: "start": "node .src/server.js" e rodar agora npm start para startar a aplicação
+
+Instalação do NODEMON para produtividade, não precisar ficar restartando o servidor após modificações
+npm install nodemon --save-dev (-dev serve para dizer ao projeto que é apenas para desenvolvimento essa biblioteca)
+colocar no scripts para dev:
+rodar com npm run dev o nodemon em desenvolvimento
+
+/************ criando a estrutura do projeto separando as pastas *******************/
+
+CRIAR PASTA controllers
+CRIAR PASTE routes -> index.js  { Router } = require("express")
+CRIAR PASTA utils -> class AppError npm install express-async-errors --save
+CRIAR PASTA database:
+DENTRO DA PASTA criar uma pasta sqlite -> index.js e tb uma pasta knex -> com uma pasta das migrations e o index.js
+sqlite -> npm install sqlite3 sqlite --save
+e knex -> npm install knex --save ->>> npx knex init para criar o arquivo knexfile.js com as config para se conectar no db.
+para trazer as config do knexfile, no index.js a gente puxa elas do knexfile
+
+importa o path no knexfile para corrigir os caminhos
+  development: {
+    client: 'sqlite3',
+    connection: {
+      filename: path.resolve(__dirname, "src", "database", "database.db")
+    },
+    pool: {
+      afterCreate: (connection, cb) => connection.run("PRAGMA foreign_keys = ON", cb)
+    },
+    migrations: {
+      directory: path.resolve(__dirname, "src", "database", "knex", "migrations")
+    },
+    useNullAsDefault: true
+  },
+
+/* commands knex -> 
+
+// colocar no script em package.json para usar npm run -> migrate (ex);
+2- npx knex migrate:make (nome da tabela) ex: createNotes
+3- npx knex migrate:latest para rodar as migration
+
+#HASH PASSWORD E COMPARE HASH
+npm install bcryptjs --save
+const { hash, compare } = require("bcryptjs");
+hash para passwords, compare para atualizações de senha
+
+/*ROUTE PARAMS -> request e response*/ 
+response.send() oque estou enviando de resposta dentro do endereço que está sendo acessado através do get
+request.params.id para identificar o parametro id passado por exemplo na rota /message/:id -> localhost:3333/message/32
+
+/*QUERY PARAMS -> ?page=2&item=3&... */
+
+/*BODY PARAMS -> enviar json no corpo da requisição*/
+{
+  "name": "eduardo morais",
+  "email": "edu@gmail.com"
+}
+request.body
+
+/*MIDDLEWARE -> serve para interceptar a requisição para verificar o que tem dentro dela, oq está sendo requisitado*/
+
+por fim configurado o insomnia do projeto -> rotas e variaveis para BASE_URL por ex
